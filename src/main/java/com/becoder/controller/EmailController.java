@@ -6,7 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.becoder.model.EmailRequest;
 import com.becoder.service.EmailService;
@@ -28,6 +30,19 @@ public class EmailController {
 			return new ResponseEntity<>("Email Send Failed !Internal Server Error ", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
+	}
+
+	@PostMapping("/email")
+	public ResponseEntity<?> sendEmailWithAttachment(@RequestParam String email,
+			@RequestParam(required = false) MultipartFile[] file) {
+
+		try {
+			emailService.sendEmailAndAttachment(email, file);
+			return new ResponseEntity<>("Email Send Sucess", HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("Email Send Failed !Internal Server Error ", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 }
